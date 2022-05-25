@@ -70,6 +70,20 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 }); // end of loginUser()
 
+// @desc        Get current user
+// @route       /api/users/me
+// @access    Private
+const getMe = asyncHandler(async (req, res) => {
+  // We can use .user because of the middlware function, protect,
+  // being passed through in userRoutes
+  const user = {
+    id: req.user._id,
+    name: req.user.name,
+    email: req.user.email,
+  };
+  res.status(200).json(user);
+}); // end of getMe()
+
 // Generate token function
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -80,4 +94,5 @@ const generateToken = (id) => {
 module.exports = {
   registerUser,
   loginUser,
+  getMe,
 };
