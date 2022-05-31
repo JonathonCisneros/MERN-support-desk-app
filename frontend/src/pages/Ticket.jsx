@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaTimesCircle } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { getTicket, closeTicket } from '../features/tickets/ticketSlice';
-import { getNotes, reset as notesReset } from '../features/notes/noteSlice';
+import {
+  getNotes,
+  createNote,
+  reset as notesReset,
+} from '../features/notes/noteSlice';
 import Modal from 'react-modal';
 import BackButton from '../components/BackButton';
 import Spinner from '../components/Spinner';
@@ -60,12 +64,15 @@ function Ticket() {
 
   // Open/close modal
   const openModal = () => setModalIsOpen(true);
-  const closeModal = () => setModalIsOpen(false);
+  const closeModal = () => {
+    setNoteText('');
+    setModalIsOpen(false);
+  };
 
   // Note submit
   const onNoteSubmit = (e) => {
     e.preventDefault();
-    console.log('submit');
+    dispatch(createNote({ noteText, ticketID }));
     closeModal();
   };
 
@@ -113,7 +120,7 @@ function Ticket() {
       >
         <h2>Add Note</h2>
         <button className='btn-close' onClick={closeModal}>
-          X
+          <FaTimesCircle />
         </button>
         <form onSubmit={onNoteSubmit}>
           <div className='form-group'>
